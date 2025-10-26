@@ -1,0 +1,29 @@
+{
+  "name": "text-editor-web",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "resolutions": {
+    "prosemirror-model": "1.25.4"
+  },
+  "packageManager": "yarn@4.10.3",
+  "dependencies": {
+    "@floating-ui/dom": "^1.7.4"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  },
+  "packageExtensions": {
+    "@tiptap/extension-floating-menu@*": {
+      "dependencies": {
+        "@floating-ui/dom": "*"
+      }
+    },
+    "@tiptap/extension-bubble-menu@*": {
+      "dependencies": {
+        "@floating-ui/dom": "*"
+      }
+    }
+  }
+}
