@@ -40,7 +40,7 @@ function TemplateGallery() {
                     <button
                       disabled={isCreating}
                       // Add proper initialContent in handleCreateDocument function
-                      onClick={() => handleCreateDocument(template.label, '')}
+                      onClick={() => handleCreateDocument(template.label, template.initialContent)}
                       style={{
                         backgroundImage: `url(${template.imageUrl})`,
                         backgroundSize: 'cover',

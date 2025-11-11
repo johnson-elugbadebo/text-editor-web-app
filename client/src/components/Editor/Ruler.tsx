@@ -1,14 +1,20 @@
 import { useRef, useState } from 'react';
 import { type MarkerProps } from '../../utils';
 import { FaCaretDown } from 'react-icons/fa';
+import { useMutation, useStorage } from '@liveblocks/react';
+import { DEFAULT_MARGIN, PAGE_WIDTH, MINIMUM_SPACE } from '@/constants/margins';
 
 const markers = Array.from({ length: 83 }, (_, i) => i);
+
+// className={`absolute top-0 w-4 h-full cursor-ew-resize z-[5] group `}
 
 const Marker = ({ position, isLeft, isDragging, onMouseDown, onDoubleClick }: MarkerProps) => {
   return (
     <div
-      className='absolute top-0 w-4 h-full cursor-ew-resize z-[5] group -ml-2'
-      style={{ [isLeft ? 'left' : 'right']: `${position}px` }}
+      className={`absolute top-0 w-4 h-full cursor-ew-resize z-[5] group ${isLeft ? '' : '-mr-4'}`}
+      style={{
+        [isLeft ? 'left' : 'right']: `${position}px`,
+      }}
       onMouseDown={onMouseDown}
       onDoubleClick={onDoubleClick}>
       <FaCaretDown className='absolute lef-1/2 top-0 h-full fill-slate-700 transform -translate-x-1/2' />
@@ -27,8 +33,16 @@ const Marker = ({ position, isLeft, isDragging, onMouseDown, onDoubleClick }: Ma
 };
 
 function Ruler() {
-  const [leftMargin, setLeftMargin] = useState(56);
-  const [rightMargin, setRightMargin] = useState(56);
+  const leftMargin = (useStorage(root => root.leftMargin) ?? DEFAULT_MARGIN) as number;
+  const setLeftMargin = useMutation(({ storage }, position: number) => {
+    storage.set('leftMargin', position);
+  }, []);
+
+  const rightMargin = (useStorage(root => root.rightMargin) ?? DEFAULT_MARGIN) as number;
+  const setRightMargin = useMutation(({ storage }, position: number) => {
+    storage.set('rightMargin', position);
+  }, []);
+
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
   const [isDraggingRight, setIsDraggingRight] = useState(false);
   const rulerRef = useRef<HTMLDivElement>(null);
@@ -42,8 +56,6 @@ function Ruler() {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    const PAGE_WIDTH = 816;
-    const MINIMUM_SPACE = 100;
     if ((isDraggingLeft || isDraggingRight) && rulerRef.current) {
       const container = rulerRef.current.querySelector('#ruler-container');
       if (container) {
@@ -54,12 +66,12 @@ function Ruler() {
         if (isDraggingLeft) {
           const maxLeftPosition = PAGE_WIDTH - rightMargin - MINIMUM_SPACE;
           const newLeftPosition = Math.min(rawPosition, maxLeftPosition);
-          setLeftMargin(newLeftPosition); // TODO: Make collaborative
+          setLeftMargin(newLeftPosition);
         } else if (isDraggingRight) {
           const maxRightPosition = PAGE_WIDTH - (leftMargin + MINIMUM_SPACE);
           const newRightPosition = Math.max(PAGE_WIDTH - rawPosition, 0);
           const constrainedRightPosition = Math.min(newRightPosition, maxRightPosition);
-          setRightMargin(constrainedRightPosition); // TODO: Make collaborative
+          setRightMargin(constrainedRightPosition);
         }
       }
     }
@@ -71,10 +83,10 @@ function Ruler() {
   };
 
   const handleLeftDoubleClick = () => {
-    setLeftMargin(56);
+    setLeftMargin(DEFAULT_MARGIN);
   };
   const handleRightDoubleClick = () => {
-    setRightMargin(56);
+    setRightMargin(DEFAULT_MARGIN);
   };
 
   return (

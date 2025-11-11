@@ -1,4 +1,4 @@
-import { Mark, mergeAttributes } from '@tiptap/core';
+import { Mark, mergeAttributes, type CommandProps } from '@tiptap/core';
 
 // import type { TextStyleAttributes } from '../index.js';
 export interface TextStyleAttributes extends Record<string, any> {}
@@ -20,23 +20,23 @@ export interface TextStyleOptions {
   mergeNestedSpanStyles: boolean;
 }
 
-declare module '@tiptap/core' {
-  interface Commands<ReturnType> {
-    textStyle: {
-      /**
-       * Remove spans without inline style attributes.
-       * @example editor.commands.removeEmptyTextStyle()
-       */
-      removeEmptyTextStyle: () => ReturnType;
-      /**
-       * Toggle a text style
-       * @param attributes The text style attributes
-       * @example editor.commands.toggleTextStyle({ fontWeight: 'bold' })
-       */
-      toggleTextStyle: (attributes?: TextStyleAttributes) => ReturnType;
-    };
-  }
-}
+// declare module '@tiptap/core' {
+//   interface Commands<ReturnType> {
+//     textStyle: {
+//       /**
+//        * Remove spans without inline style attributes.
+//        * @example editor.commands.removeEmptyTextStyle()
+//        */
+//       removeEmptyTextStyle: () => ReturnType;
+//       /**
+//        * Toggle a text style
+//        * @param attributes The text style attributes
+//        * @example editor.commands.toggleTextStyle({ fontWeight: 'bold' })
+//        */
+//       toggleTextStyle: (attributes?: TextStyleAttributes) => ReturnType;
+//     };
+//   }
+// }
 
 const MAX_FIND_CHILD_SPAN_DEPTH = 20;
 
@@ -127,8 +127,8 @@ export const TextStyle = Mark.create<TextStyleOptions>({
   addCommands() {
     return {
       toggleTextStyle:
-        attributes =>
-        ({ commands }) => {
+        (attributes?: TextStyleAttributes) =>
+        ({ commands }: CommandProps) => {
           return commands.toggleMark(this.name, attributes);
         },
       removeEmptyTextStyle:

@@ -11,6 +11,7 @@
 import type * as documents from "../documents.js";
 import type * as http from "../http.js";
 import type * as liveblocks from "../liveblocks.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   documents: typeof documents;
   http: typeof http;
   liveblocks: typeof liveblocks;
+  users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;
 

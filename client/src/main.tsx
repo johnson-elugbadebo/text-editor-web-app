@@ -7,8 +7,7 @@ import App from './App.tsx';
 import { ClerkProvider, useAuth } from '@clerk/clerk-react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { ConvexReactClient } from 'convex/react';
-import LiveblocksWrapper from '@/components/Editor/LiveBlocksWrapper.tsx';
-// import { toast } from 'sonner';
+// import LiveblocksWrapper from '@/components/Editor/LiveBlocksWrapper.tsx';
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
@@ -22,9 +21,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} signInFallbackRedirectUrl='/' signUpFallbackRedirectUrl='/'>
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <LiveblocksWrapper>
-          <App />
-        </LiveblocksWrapper>
+        <App />
       </ConvexProviderWithClerk>
     </ClerkProvider>
   </StrictMode>

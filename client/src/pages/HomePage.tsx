@@ -5,6 +5,7 @@ import { usePaginatedQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSearchParams } from '@/hooks/use-search-params';
 import DocumentsTable from '@/components/Home/DocumentsTable';
+// import ErrorThrower from '@/components/ErrorThrower';
 
 function HomePage() {
   const [search] = useSearchParams('search');
@@ -16,6 +17,7 @@ function HomePage() {
         <Navbar />
       </div>
       <div className='mt-16'>
+        {/* <ErrorThrower /> */}
         <TemplateGallery />
         <DocumentsTable documents={results} loadMore={loadMore} status={status} />
       </div>

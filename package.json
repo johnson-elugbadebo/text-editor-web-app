@@ -7,6 +7,9 @@
   "resolutions": {
     "prosemirror-model": "1.25.4"
   },
+  "scripts": {
+    "build:client": "yarn workspace client build"
+  },
   "packageManager": "yarn@4.10.3",
   "dependencies": {
     "@floating-ui/dom": "^1.7.4"

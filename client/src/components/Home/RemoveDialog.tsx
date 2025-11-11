@@ -13,8 +13,10 @@ import {
 import { api } from '../../../convex/_generated/api';
 import { type RemoveDialogProps } from '../../utils';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 function RemoveDialog({ documentId, children }: RemoveDialogProps) {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const remove = useMutation(api.documents.removeDocumentById);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -27,6 +29,7 @@ function RemoveDialog({ documentId, children }: RemoveDialogProps) {
       await remove({ id: documentId });
       toast.success('Document deleted');
       // setOpen(false); // Close dialog after successful delete
+      navigate(`/`);
     } catch (error) {
       toast.error('Not authorized to delete');
       console.log(error);

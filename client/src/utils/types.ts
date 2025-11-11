@@ -3,6 +3,8 @@ import { type Editor } from '@tiptap/react';
 import { type PaginationStatus } from 'convex/react';
 // import { type Doc, type Id } from '../../convex/_generated/dataModel';
 import type { Doc, Id } from 'convex/_generated/dataModel';
+import { type Preloaded } from 'convex/react';
+import type { api } from 'convex/_generated/api';
 
 export interface DocumentIDPageProps {
   params: Promise<{ documentId: string }>;
@@ -62,4 +64,29 @@ export interface RenameDialogProps {
   documentId: Id<'documents'>;
   initialTitle: string;
   children: React.ReactNode;
+}
+
+export type User = {
+  id: string;
+  name: string;
+  avatar: string | undefined;
+  color: string;
+};
+
+export interface AvatarProps {
+  src: string;
+  name: string;
+}
+
+export interface DocumentProps {
+  preloadedDocument: Preloaded<typeof api.documents.getDocumentById>;
+}
+
+export interface NavbarProps {
+  data: Doc<'documents'>;
+}
+
+export interface DocumentInputProps {
+  title: string;
+  id: Id<'documents'>;
 }

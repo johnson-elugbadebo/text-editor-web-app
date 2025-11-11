@@ -1,6 +1,7 @@
 import { httpAction } from './_generated/server';
 import { Liveblocks } from '@liveblocks/node';
 import { api } from './_generated/api';
+import { generateColor } from '../src/utils';
 
 declare const process: { env: Record<string, string | undefined> };
 
@@ -30,14 +31,35 @@ export const auth = httpAction(async (ctx, request) => {
     secret: process.env.LIVEBLOCKS_SECRET_KEY!,
   });
 
-  const { room } = await request.json();
-
   const userIdentity = await ctx.auth.getUserIdentity();
   if (!userIdentity) {
     return new Response('Unauthorized', {
       status: 401,
       headers: new Headers({
         'Access-Control-Allow-Origin': '*',
+      }),
+    });
+  }
+
+  const { room } = await request.json();
+  // Handle inbox notifications (no room parameter)
+  if (!room) {
+    const session = liveblocks.prepareSession(userIdentity.subject, {
+      userInfo: {
+        name: userIdentity.name ?? userIdentity.email ?? 'Anonymous',
+        avatar: userIdentity.pictureUrl,
+        color: generateColor(userIdentity.name ?? userIdentity.email ?? 'Anonymous'),
+      },
+    });
+
+    session.allow('*', session.FULL_ACCESS); // Allow access to all rooms for inbox
+
+    const { body, status } = await session.authorize();
+    return new Response(body, {
+      status,
+      headers: new Headers({
+        'Access-Control-Allow-Origin': '*',
+        Vary: 'origin',
       }),
     });
   }
@@ -57,7 +79,7 @@ export const auth = httpAction(async (ctx, request) => {
   // Check if user is member of same organization tied to the document
   const isOrganizationMember = !!(document.organizationId && document.organizationId === userIdentity.organization_id);
 
-  console.log({ isOwner, isOrganizationMember });
+  // console.log({ isOwner, isOrganizationMember });
 
   // Do not allow user if user is not owner AND not organization member
   // Allow user if user is owner OR user is organization member
@@ -71,13 +93,19 @@ export const auth = httpAction(async (ctx, request) => {
   }
 
   const name = userIdentity.name ?? userIdentity.email ?? 'Anonymous';
-  const hue = Math.abs(name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)) % 360;
+  // console.log('Liveblocks auth - User info:', {
+  //   name,
+  //   rawName: userIdentity.name,
+  //   email: userIdentity.email,
+  //   subject: userIdentity.subject,
+  // });
+  const color = generateColor(name);
 
   const session = liveblocks.prepareSession(userIdentity.subject, {
     userInfo: {
       name,
       avatar: userIdentity.pictureUrl,
-      color: `hsl(${hue}, 80%, 60%)`,
+      color,
     },
   });
 

@@ -34,18 +34,23 @@ import Threads from '@/components/Editor/Threads';
 // import { History } from '@tiptap/extension-history';
 // import { useMemo } from 'react';
 import Underline from '@tiptap/extension-underline';
+import { useStorage } from '@liveblocks/react';
+import { DEFAULT_MARGIN } from '@/constants/margins';
 
-function EditorInstance() {
-  const liveblocks = useLiveblocksExtension({ initialContent: undefined });
+function EditorInstance({ initialContent }: { initialContent?: string }) {
+  const leftMargin = useStorage(root => root.leftMargin);
+  const rightMargin = useStorage(root => root.rightMargin);
+
+  const liveblocks = useLiveblocksExtension({ initialContent: initialContent ?? undefined });
   // const isEditorReady = useIsEditorReady();
   const { setEditor } = useEditorStore();
 
   const editor = useEditor({
     editorProps: {
       attributes: {
-        style: 'padding-left: 56px; padding-right: 56px',
+        style: `padding-left: ${(leftMargin ?? DEFAULT_MARGIN) as number}px; padding-right: ${(rightMargin ?? DEFAULT_MARGIN) as number}px`,
         class:
-          'focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text',
+          'focus:outline-none print:border-0 bg-white border border-[#C7C7C7] flex flex-col min-h-[1054px] w-[816px] pt-10 pb-10 cursor-text',
       },
     },
     extensions: [
@@ -100,7 +105,7 @@ function EditorInstance() {
   }, [editor, setEditor]);
 
   return (
-    <div className='size-full overflow-x-auto bg-[#F9FBFD] px-4 print:p-0 print:bg-white print:overflow-visible'>
+    <div className='size-full overflow-x-auto bg-[#F9FBFD] print:p-0 print:bg-white print:overflow-visible'>
       <Ruler />
       <div className='min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:w-full print:min-w-0'>
         <>

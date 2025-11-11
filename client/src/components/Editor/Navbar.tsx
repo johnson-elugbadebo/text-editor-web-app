@@ -1,4 +1,6 @@
+import Avatars from '@/components/Editor/Avatars';
 import DocumentInput from '@/components/Editor/DocumentInput';
+import Inbox from '@/components/Editor/Inbox';
 import {
   Menubar,
   MenubarMenu,
@@ -32,10 +34,33 @@ import {
   Undo2Icon,
 } from 'lucide-react';
 import { BsFilePdf } from 'react-icons/bs';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { type NavbarProps } from '../../utils';
+import { useMutation } from 'convex/react';
+import { api } from 'convex/_generated/api';
+import RenameDialog from '@/components/Home/RenameDialog';
+import RemoveDialog from '@/components/Home/RemoveDialog';
 
-function Navbar() {
+function Navbar({ data }: NavbarProps) {
   const { editor } = useEditorStore();
+  const navigate = useNavigate();
+
+  const mutation = useMutation(api.documents.createDocument);
+
+  const handleNewDocument = () => {
+    mutation({
+      title: 'Untitled Document',
+      initialContent: '',
+    })
+      .catch(
+        error => console.log(error)
+        // toast.error('Something went wrong')
+      )
+      .then(id =>
+        // toast.success("Document Created")
+        navigate(`/documents/${id}`)
+      );
+  };
 
   const handleUndo = () => {
     if (editor && !editor.isDestroyed) {
@@ -105,7 +130,7 @@ function Navbar() {
     const blob = new Blob([JSON.stringify(content)], {
       type: 'application/json',
     });
-    handleDownload(blob, `document.json`); // TODO: Use Document name
+    handleDownload(blob, `${data.title}.json`);
   };
 
   const handleSaveHTML = () => {
@@ -115,7 +140,7 @@ function Navbar() {
     const blob = new Blob([content], {
       type: 'text/html',
     });
-    handleDownload(blob, `document.html`); // TODO: Use Document name
+    handleDownload(blob, `${data.title}.html`);
   };
 
   const handleSaveText = () => {
@@ -125,7 +150,7 @@ function Navbar() {
     const blob = new Blob([content], {
       type: 'text/plain',
     });
-    handleDownload(blob, `document.txt`); // TODO: Use Document name
+    handleDownload(blob, `${data.title}.txt`);
   };
 
   return (
@@ -135,7 +160,7 @@ function Navbar() {
           <img src='/logo_v6.svg' alt='Logo' width={36} height={36} />
         </Link>
         <div className='flex flex-col'>
-          <DocumentInput />
+          <DocumentInput title={data.title} id={data._id} />
           <div className='flex'>
             <Menubar className='border-none bg-transparent shadow-none h-auto p-0'>
               {/* Menu 1 - File*/}
@@ -172,19 +197,23 @@ function Navbar() {
                       </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
-                  <MenubarItem>
+                  <MenubarItem onClick={handleNewDocument}>
                     <FilePlusIcon className='size-4 mr-2' />
                     New Document
                   </MenubarItem>
                   <MenubarSeparator />
-                  <MenubarItem>
-                    <FilePenIcon className='size-4 mr-2' />
-                    Rename
-                  </MenubarItem>
-                  <MenubarItem>
-                    <TrashIcon className='size-4 mr-2' />
-                    Delete
-                  </MenubarItem>
+                  <RenameDialog documentId={data._id} initialTitle={data.title}>
+                    <MenubarItem onClick={e => e.stopPropagation()} onSelect={e => e.preventDefault()}>
+                      <FilePenIcon className='size-4 mr-2' />
+                      Rename
+                    </MenubarItem>
+                  </RenameDialog>
+                  <RemoveDialog documentId={data._id}>
+                    <MenubarItem onClick={e => e.stopPropagation()} onSelect={e => e.preventDefault()}>
+                      <TrashIcon className='size-4 mr-2' />
+                      Delete
+                    </MenubarItem>
+                  </RemoveDialog>
                   <MenubarSeparator />
                   <MenubarItem onClick={() => window.print()}>
                     <PrinterIcon className='size-4 mr-2' />
@@ -266,6 +295,8 @@ function Navbar() {
         </div>
       </div>
       <div className='flex gap-3 items-center pl-6'>
+        <Avatars />
+        <Inbox />
         <OrganizationSwitcher
           afterCreateOrganizationUrl='/'
           afterLeaveOrganizationUrl='/'
