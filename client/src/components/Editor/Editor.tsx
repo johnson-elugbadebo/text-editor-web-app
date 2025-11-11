@@ -46,6 +46,7 @@ function EditorInstance({ initialContent }: { initialContent?: string }) {
   const { setEditor } = useEditorStore();
 
   const editor = useEditor({
+    autofocus: true,
     editorProps: {
       attributes: {
         style: `padding-left: ${(leftMargin ?? DEFAULT_MARGIN) as number}px; padding-right: ${(rightMargin ?? DEFAULT_MARGIN) as number}px`,
