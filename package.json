@@ -1,5 +1,6 @@
 {
   "name": "text-editor-web",
+  "private": true,
   "workspaces": [
     "client",
     "server"
