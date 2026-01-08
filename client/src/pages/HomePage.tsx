@@ -1,6 +1,5 @@
 import Navbar from '@/components/Home/Navbar';
 import TemplateGallery from '@/components/Home/TemplateGallery';
-// import { Link } from 'react-router-dom';
 import { usePaginatedQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useSearchParams } from '@/hooks/use-search-params';

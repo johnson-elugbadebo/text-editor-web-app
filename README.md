@@ -44,7 +44,7 @@ text-editor-web/
 │   ├── vite.config.ts               # Vite configuration
 │   ├── tailwind.config.js           # TailwindCSS configuration
 │   └── package.json                 # Frontend dependencies
-├── server/                          # Traditional backend (empty - using Convex)
+├── server/                          # Empty Folder (using Convex instead of traditional backend for now)
 │   └── README.md                    # Note about using Convex instead
 └── package.json                     # Root workspace configuration
 ```
@@ -72,7 +72,7 @@ text-editor-web/
   - HTTP actions for custom endpoints
   - File storage
 
-> **Note:** The `server/` folder is currently empty as we're using Convex for all backend functionality. Convex provides a complete backend solution including database, authentication, real-time subscriptions, and serverless functions.
+> **Note:** The `server/` folder is currently empty as the app uses Convex for all backend functionality. Convex provides a complete backend solution including database, authentication, real-time subscriptions, and serverless functions.
 
 ### Authentication
 

@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { AlertTriangleIcon } from 'lucide-react';
-// import { Link } from 'react-router-dom';
 import { type FallbackProps } from 'react-error-boundary';
 import { useNavigate } from 'react-router-dom';
 
