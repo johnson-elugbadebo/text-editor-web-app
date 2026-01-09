@@ -5,8 +5,20 @@
     "client",
     "server"
   ],
+  "resolutions": {
+    "@tiptap/core": "2.26.3",
+    "@tiptap/pm": "2.26.3",
+    "@liveblocks/core": "3.9.1",
+    "@liveblocks/client": "3.9.1",
+    "@liveblocks/react": "3.9.1",
+    "@liveblocks/react-tiptap": "3.9.1",
+    "@liveblocks/react-ui": "3.9.1",
+    "@liveblocks/node": "3.9.1"
+  },
   "scripts": {
-    "build:client": "yarn workspace client build"
+    "build:client": "yarn workspace client build",
+    "preview:client": "yarn workspace client preview",
+    "dev:client": "yarn workspace client dev"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.7.4"
